@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>krawtchouk</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    
+    <div id="head">
+        <span style="color: #009879;"><b>KMI3D</b></span>
+        <span style="color: grey; font-size: 10px;">A MATLAB package to calculate 3D Krawtchouk moment invariants</span>
+    </div>
+    
+    <div id="navcon">
+        <div id="navigation">
+            <nav>
+                <ul class="navigation-list">
+                    <li class="navigation-list-item" style="margin-bottom: 10px;">Table of Content</li></br>
+                    <li class="navigation-list-item-list" style="margin-bottom: 10px;"><a href="./index.html">Home</a></li></br>
+                    <li class="navigation-list-item-list" style="margin-bottom: 10px;"><a href="./started.html">Getting Started</a></li></br>
+                    <li class="navigation-list-item-list" style="margin-bottom: 10px;"><a href="./krawtchouk.html">Krawtchouk Moments</a></li></br>
+                    <li class="navigation-list-item-list" style="margin-bottom: 10px;"><a href="./examples.html">Examples</a></li></br>
+                </ul>
+            </nav>
+        </div>
+
+        <div id="content">
+            <h4>Prepare the Image</h4>
+            <p>Here, we provide an example of how to construct an input 3D array using 2D image slices:</p>
+            <pre>
+                <code>
+folder = "please input the folder that contains the slices";
+FileList = natsortfiles(dir(fullfile(folder, '*.png')));
+
+array3d = zeros(rows, cols, numOfSlices);  % params of the 3D image
+for slice = 1 : numOfSlices
+&nbsp;&nbsp;&nbsp;&nbsp;File = fullfile(FileList(slice).folder, FileList(slice).name);
+&nbsp;&nbsp;&nbsp;&nbsp;thisSlice = imread(File);
+&nbsp;&nbsp;&nbsp;&nbsp;array3d(:,:,slice) = thisSlice;
+end
+
+mask = false(size(array3d));
+pixIndex = find(array3d > 0);
+mask(pixIndex) = 1;  % binary image
+                </code>
+            </pre>
+
+            <p>Adjust the image size as needed, here we resize the image to 128x128x128:</p>
+            <pre>
+                <code>
+N = 128;
+resizeScale = N / max([rows, cols, numOfSlices]);
+scaledMask = imresize3(mask, resizeScale);
+
+img = zeros(N, N, N);
+img(1:size(scaledMask,1), 1:size(scaledMask,2), 1:size(scaledMask,3)) = scaledMask;
+                </code>
+            </pre>
+
+            <h4>Extract Features</h4>
+            <p>Now we can easily get the Krawtchouk moment invariants of the 3D image:</p>
+            <pre>
+                <code>
+invariants = KMI3D(img);
+                </code>
+            </pre>
+            <p>If we want to specify other input arguments, such as the order of the moments:</p>
+            <pre>
+                <code>
+invariants = KMI3D(img, 3);
+                </code>
+            </pre>
+            <p>or the point-of-interest:</p>
+            <pre>
+                <code>
+invariants = KMI3D(img, [63, 63, 63]);
+                </code>
+            </pre>
+            <p>or both of them:</p>
+            <pre>
+                <code>
+invariants = KMI3D(img, 3, [63, 63, 63]);
+                </code>
+            </pre>
+
+
+        </div>
+
+    </div>
+</body>
+
+</html>
