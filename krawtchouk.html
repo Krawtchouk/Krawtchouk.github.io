@@ -9,63 +9,74 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
 </head>
 <body>
-    <div id="navigation">
-        <nav>
-            <ul class="navigation-list">
-                <li class="navigation-list-item-list" style="margin-bottom: 10px;"><a href="./index.html">Home</a></li></br>
-                <li class="navigation-list-item">Algorithm</li></br>
-                <li class="navigation-list-item-list"><a href="./krawtchouk.html">Krawtchouk Moments</a></li></br>
-                <li class="navigation-list-item-list"><a href="./classification.html">Classification</a></li></br>
-            </ul>
-        </nav>
+
+    <div id="head">
+        <span style="color: #009879;"><b>KMI3D</b></span>
+        <span style="color: grey; font-size: 10px;">A MATLAB package to calculate 3D Krawtchouk moment invariants</span>
     </div>
 
-    <div id="content">
-        <h3>Krawtchouk Polynomials</h3>
-        <p>The one-dimensional Krawtchouk polynomials are the basis functions for constructing Krawtchouk moments. The orthogonality property allows these polynomials to describe features with minimal redundancy.</p>
-        <p>The n-th order of the discrete Krawtchouk polynomials can be defined as follows:</p>
-        <p>\[K_n(x;p,N) = \sum_{i=0}^{n}a_{i,n,p,N}x^i = \sum_{i=0}^{n}\sum_{k=i}^n\frac{(-1)^kn!(N-k)!}{(p)^kN!(n-k)!k!}S_1(k,i)x^i,\]</p>
-        <p>where \(x\) is a discrete value forming the polynomial by the power of \(n\), both \(x\) and \(n = 0, \dots, N\), \(N>0\), \(p\in(0,1)\) decides the shift of the polynomial curve and \(S_1(k,i)\) is the Stirling numbers of the first kind.</p>
-        <p>To avoid numerical fluctuations and achieve numerical stability, Yap et al. introduced the weighted Krawtchouk polynomial, defined as</p>
-        <p>\[\bar{K}_n(x) = {K}_n(x)\sqrt{\frac{w(x;p,N)}{\rho(n;p,N)}},\]</p>
-        <p>where the weight function \(w(x;p,N) = \begin{pmatrix}N\\x\end{pmatrix}p^x(1-p)^{N-x}\) and the norm \(\rho(n;p,N)=(-1)^n(\frac{1-p}{p})^n\frac{n!}{(-N)_n}\).</p>
-
-        <h3>3D Weighted Krawtchouk Moment Invariants</h3>
-        <p>Let \(f(x,y,z)\) be the function representing the 3D image (where \(x\), \(y\) and \(z\) are the pixel coordinates of the image and the output of \(f\) is the pixel intensity) with size \(N\times M\times L\) and \(V\) be the volume of the specimen inside the 3D image, we have</p>
-        <p>\[f(x,y,z) = \begin{cases}1, & \forall(x,y,z) \in V;\\0, & \text{otherwise}.\end{cases}\]</p>
-        <p>The 3D weighted Krawtchouk moments of order \(n+m+l\) of \(f(x,y,z)\) can then be constructed from polynomials defined as</p>
-        <p>\[\begin{aligned}
-            Q_{nml} &= \sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}\bar{K}_n(x)\bar{K}_m(y)\bar{K}_l(z)f(x,y,z) \\
-            &= \left[\rho(n)\rho(m)\rho(l)\right]^{-\frac{1}{2}}\sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}K_n(x)K_m(y)K_l(z)\tilde{f}(x,y,z) \\
-            &= \left[\rho(n)\rho(m)\rho(l)\right]^{-\frac{1}{2}}\sum_{i=0}^{n}\sum_{j=0}^{m}\sum_{k=0}^{l}a_{i,n,p_1,N-1}a_{j,m,p_2,M-1}a_{k,l,p_3,L-1}M_{ijk},
-            \end{aligned}\]</p>
-        <p>where \(\tilde{f}(x,y,z)=\left[w(x)w(y)w(z)\right]^{\frac{1}{2}}f(x,y,z)\) and \(M_{ijk}\) is the geometric moments of \(\tilde{f}(x,y,z)\) defined as</p>
-        <p>\[M_{ijk} = \sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}\tilde{f}(x,y,z)x^iy^jz^k.\]</p>
-        <p>Therefore, \(Q_{nml}\) can be regarded as a linear combination of geometric moments \(M_{ijk}\). Notice that the size parameters \(N\), \(M\) and \(L\) are substituted with \(N-1\), \(M-1\) and \(L-1\) respectively to match the \(N\times M\times L\) pixel points of the 3D image.</p>
-        <p>The translation invariant (central moments) of \(\tilde{f}(x,y,z)\) can be defined as</p>
-        <p>\[\mu_{ijk} = \sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}\tilde{f}(x,y,z)(x-\bar{x})^i(y-\bar{y})^j(z-\bar{z})^k,\]</p>
-        <p>where \(\bar{x}=\frac{M_{100}}{M_{000}}\), \(\bar{y}=\frac{M_{010}}{M_{000}}\) and \(\bar{z}=\frac{M_{001}}{M_{000}}\) denote the centroid coordinates of \(\tilde{f}(x,y,z)\).</p>
-        <p>Given the central moments, the scale invariant can be achieved by</p>
-        <p>\[\eta_{ijk}=\frac{\mu_{ijk}}{M_{000}^{\frac{i+j+k}{3}+1}}.\]</p>
-        <p>Instead of using Euler angle sequences to define the 3D rotation matrix, which empirically do not have rotational invariance when rotated by certain angles, we use the eigenvectors of the inertia matrix to define the rows of the rotation matrix, where the inertia matrix is</p>
-        <p>\[I =
-            \begin{bmatrix}
-            I_{xx} & -I_{xy} & -I_{xz}\\
-            -I_{yx} & I_{yy} & -I_{yz}\\
-            -I_{zx} & -I_{zy} & I_{zz}
-            \end{bmatrix},\]</p>
-        <p>with entries \(I_{xx}=\mu_{020}+\mu_{002}\), \(I_{yy}=\mu_{200}+\mu_{002}\), \(I_{zz}=\mu_{200}+\mu_{020}\), \(I_{xy}=I_{yx}=\mu_{110}\), \(I_{xz}=I_{zx}=\mu_{101}\), \(I_{yz}=I_{zy}=\mu_{011}\).</p>
-        <p>The inertia matrix \(I\) is a real and symmetric matrix with real eigenvalues \(\{\lambda_i,i=1,2,3\}\) and orthogonal eigenvectors \(\{\mathbf{u}_i,i=1,2,3\}\), i.e.,</p>
-        <p>\[I\mathbf{u}_i = \lambda_i \mathbf{u}_i.\]</p>
-        <p>However, \(\mathbf{u}_i\) and \(-\mathbf{u}_i\), are two valid eigenvectors related to the same eigenvalue, which define eight different combinations of any orthogonal vector \(\{\pm \mathbf{u}_1\, \pm \mathbf{u}_2\, \pm \mathbf{u}_3\}\) specifying the same principal axes. In order to eliminate the ambiguity in 3D object orientation, we choose the centroid \((\bar{x}, \bar{y}, \bar{z})\) as the reference point to compute the rotation matrix because it is a geometric property and can be easily computed. Once the centroid vector is obtained, the dot product between each eigenvector and the centroid vector is calculated and only the eigenvectors with positive results are selected. After selecting the rotation matrix, the geometric moment invariants of \(\tilde{f}(x,y,z)\) can be obtained by</p>
-        <p>\[v_{ijk}=M_{000}^{\frac{i+j+k}{3}+1}\sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}
-            \begin{Bmatrix}
-                [u_{11}(x-\bar{x})+u_{21}(y-\bar{y})+u_{31}(z-\bar{z})]^i\\
-                \times[u_{12}(x-\bar{x})+u_{22}(y-\bar{y})+u_{32}(z-\bar{z})]^j\\
-                \times[u_{13}(x-\bar{x})+u_{23}(y-\bar{y})+u_{33}(z-\bar{z})]^k
-            \end{Bmatrix}\tilde{f}(x,y,z).\]</p>
-        <p>Finally, we can obtain the 3D weighted Krawtchouk moment invariants by replacing \(M_{ijk}\) with \(v_{ijk}\), which are independent to translation, scaling and rotation. To summarize this approach simply, given a 3D image \(f(x,y,z)\), the shape information of the object in it can be described using different lengths of a vector \(\mathbf{Q}\) depending on the order. Expectedly, this vector does not change or changes only slightly when we transform the image.</p>
+    <div id="navcon">
+        <div id="navigation">
+            <nav>
+                <ul class="navigation-list">
+                    <li class="navigation-list-item" style="margin-bottom: 10px;">Table of Content</li></br>
+                    <li class="navigation-list-item-list" style="margin-bottom: 10px;"><a href="./index.html">Home</a></li></br>
+                    <li class="navigation-list-item-list" style="margin-bottom: 10px;"><a href="./started.html">Getting Started</a></li></br>
+                    <li class="navigation-list-item-list" style="margin-bottom: 10px;"><a href="./krawtchouk.html">Krawtchouk Moments</a></li></br>
+                    <li class="navigation-list-item-list" style="margin-bottom: 10px;"><a href="./examples.html">Examples</a></li></br>
+                </ul>
+            </nav>
         </div>
+    
+        <div id="content">
+            <h4>Krawtchouk Polynomials</h4>
+            <p>The one-dimensional Krawtchouk polynomials are the basis functions for constructing Krawtchouk moments. The orthogonality property allows these polynomials to describe features with minimal redundancy.</p>
+            <p>The n-th order of the discrete Krawtchouk polynomials can be defined as follows:</p>
+            <p>\[K_n(x;p,N) = \sum_{i=0}^{n}a_{i,n,p,N}x^i = \sum_{i=0}^{n}\sum_{k=i}^n\frac{(-1)^kn!(N-k)!}{(p)^kN!(n-k)!k!}S_1(k,i)x^i,\]</p>
+            <p>where \(x\) is a discrete value forming the polynomial by the power of \(n\), both \(x\) and \(n = 0, \dots, N\), \(N>0\), \(p\in(0,1)\) decides the shift of the polynomial curve and \(S_1(k,i)\) is the Stirling numbers of the first kind.</p>
+            <p>To avoid numerical fluctuations and achieve numerical stability, Yap et al. introduced the weighted Krawtchouk polynomial, defined as</p>
+            <p>\[\bar{K}_n(x) = {K}_n(x)\sqrt{\frac{w(x;p,N)}{\rho(n;p,N)}},\]</p>
+            <p>where the weight function \(w(x;p,N) = \begin{pmatrix}N\\x\end{pmatrix}p^x(1-p)^{N-x}\) and the norm \(\rho(n;p,N)=(-1)^n(\frac{1-p}{p})^n\frac{n!}{(-N)_n}\).</p>
+    
+            <h4>3D Weighted Krawtchouk Moment Invariants</h4>
+            <p>Let \(f(x,y,z)\) be the function representing the 3D image (where \(x\), \(y\) and \(z\) are the pixel coordinates of the image and the output of \(f\) is the pixel intensity) with size \(N\times M\times L\) and \(V\) be the volume of the specimen inside the 3D image, we have</p>
+            <p>\[f(x,y,z) = \begin{cases}1, & \forall(x,y,z) \in V;\\0, & \text{otherwise}.\end{cases}\]</p>
+            <p>The 3D weighted Krawtchouk moments of order \(n+m+l\) of \(f(x,y,z)\) can then be constructed from polynomials defined as</p>
+            <p>\[\begin{aligned}
+                Q_{nml} &= \sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}\bar{K}_n(x)\bar{K}_m(y)\bar{K}_l(z)f(x,y,z) \\
+                &= \left[\rho(n)\rho(m)\rho(l)\right]^{-\frac{1}{2}}\sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}K_n(x)K_m(y)K_l(z)\tilde{f}(x,y,z) \\
+                &= \left[\rho(n)\rho(m)\rho(l)\right]^{-\frac{1}{2}}\sum_{i=0}^{n}\sum_{j=0}^{m}\sum_{k=0}^{l}a_{i,n,p_1,N-1}a_{j,m,p_2,M-1}a_{k,l,p_3,L-1}M_{ijk},
+                \end{aligned}\]</p>
+            <p>where \(\tilde{f}(x,y,z)=\left[w(x)w(y)w(z)\right]^{\frac{1}{2}}f(x,y,z)\) and \(M_{ijk}\) is the geometric moments of \(\tilde{f}(x,y,z)\) defined as</p>
+            <p>\[M_{ijk} = \sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}\tilde{f}(x,y,z)x^iy^jz^k.\]</p>
+            <p>Therefore, \(Q_{nml}\) can be regarded as a linear combination of geometric moments \(M_{ijk}\). Notice that the size parameters \(N\), \(M\) and \(L\) are substituted with \(N-1\), \(M-1\) and \(L-1\) respectively to match the \(N\times M\times L\) pixel points of the 3D image.</p>
+            <p>The translation invariant (central moments) of \(\tilde{f}(x,y,z)\) can be defined as</p>
+            <p>\[\mu_{ijk} = \sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}\tilde{f}(x,y,z)(x-\bar{x})^i(y-\bar{y})^j(z-\bar{z})^k,\]</p>
+            <p>where \(\bar{x}=\frac{M_{100}}{M_{000}}\), \(\bar{y}=\frac{M_{010}}{M_{000}}\) and \(\bar{z}=\frac{M_{001}}{M_{000}}\) denote the centroid coordinates of \(\tilde{f}(x,y,z)\).</p>
+            <p>Given the central moments, the scale invariant can be achieved by</p>
+            <p>\[\eta_{ijk}=\frac{\mu_{ijk}}{M_{000}^{\frac{i+j+k}{3}+1}}.\]</p>
+            <p>Instead of using Euler angle sequences to define the 3D rotation matrix, which empirically do not have rotational invariance when rotated by certain angles, we use the eigenvectors of the inertia matrix to define the rows of the rotation matrix, where the inertia matrix is</p>
+            <p>\[I =
+                \begin{bmatrix}
+                I_{xx} & -I_{xy} & -I_{xz}\\
+                -I_{yx} & I_{yy} & -I_{yz}\\
+                -I_{zx} & -I_{zy} & I_{zz}
+                \end{bmatrix},\]</p>
+            <p>with entries \(I_{xx}=\mu_{020}+\mu_{002}\), \(I_{yy}=\mu_{200}+\mu_{002}\), \(I_{zz}=\mu_{200}+\mu_{020}\), \(I_{xy}=I_{yx}=\mu_{110}\), \(I_{xz}=I_{zx}=\mu_{101}\), \(I_{yz}=I_{zy}=\mu_{011}\).</p>
+            <p>The inertia matrix \(I\) is a real and symmetric matrix with real eigenvalues \(\{\lambda_i,i=1,2,3\}\) and orthogonal eigenvectors \(\{\mathbf{u}_i,i=1,2,3\}\), i.e.,</p>
+            <p>\[I\mathbf{u}_i = \lambda_i \mathbf{u}_i.\]</p>
+            <p>However, \(\mathbf{u}_i\) and \(-\mathbf{u}_i\), are two valid eigenvectors related to the same eigenvalue, which define eight different combinations of any orthogonal vector \(\{\pm \mathbf{u}_1\, \pm \mathbf{u}_2\, \pm \mathbf{u}_3\}\) specifying the same principal axes. In order to eliminate the ambiguity in 3D object orientation, we choose the centroid \((\bar{x}, \bar{y}, \bar{z})\) as the reference point to compute the rotation matrix because it is a geometric property and can be easily computed. Once the centroid vector is obtained, the dot product between each eigenvector and the centroid vector is calculated and only the eigenvectors with positive results are selected. After selecting the rotation matrix, the geometric moment invariants of \(\tilde{f}(x,y,z)\) can be obtained by</p>
+            <p>\[v_{ijk}=M_{000}^{\frac{i+j+k}{3}+1}\sum_{x=0}^{N-1}\sum_{y=0}^{M-1}\sum_{z=0}^{L-1}
+                \begin{Bmatrix}
+                    [u_{11}(x-\bar{x})+u_{21}(y-\bar{y})+u_{31}(z-\bar{z})]^i\\
+                    \times[u_{12}(x-\bar{x})+u_{22}(y-\bar{y})+u_{32}(z-\bar{z})]^j\\
+                    \times[u_{13}(x-\bar{x})+u_{23}(y-\bar{y})+u_{33}(z-\bar{z})]^k
+                \end{Bmatrix}\tilde{f}(x,y,z).\]</p>
+            <p>Finally, we can obtain the 3D weighted Krawtchouk moment invariants by replacing \(M_{ijk}\) with \(v_{ijk}\), which are independent to translation, scaling and rotation. To summarize this approach simply, given a 3D image \(f(x,y,z)\), the shape information of the object in it can be described using different lengths of a vector \(\mathbf{Q}\) depending on the order. Expectedly, this vector does not change or changes only slightly when we transform the image.</p>
+        </div>
+    </div>
+    
+    
     
 </body>
 </html>
