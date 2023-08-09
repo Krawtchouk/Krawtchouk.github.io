@@ -35,9 +35,9 @@ FileList = natsortfiles(dir(fullfile(folder, '*.png')));
 
 array3d = zeros(rows, cols, numOfSlices);  % params of the 3D image
 for slice = 1 : numOfSlices
-    File = fullfile(FileList(slice).folder, FileList(slice).name);
-    thisSlice = imread(File);
-    array3d(:,:,slice) = thisSlice;
+&nbsp;&nbsp;&nbsp;&nbsp;File = fullfile(FileList(slice).folder, FileList(slice).name);
+&nbsp;&nbsp;&nbsp;&nbsp;thisSlice = imread(File);
+&nbsp;&nbsp;&nbsp;&nbsp;array3d(:,:,slice) = thisSlice;
 end
 
 mask = false(size(array3d));
