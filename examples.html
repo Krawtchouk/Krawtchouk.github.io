@@ -43,21 +43,39 @@ end
 mask = false(size(array3d));
 pixIndex = find(array3d > 0);
 mask(pixIndex) = 1;  % binary image
-                </code>
-            </pre>
 
-            <p>Adjust the image size as needed, here we resize the image to 128x128x128:</p>
-            <pre>
-                <code>
+% adjust the image size as needed, here we resize the image to 128x128x128
 N = 128;
 resizeScale = N / max([rows, cols, numOfSlices]);
 scaledMask = imresize3(mask, resizeScale);
-
 img = zeros(N, N, N);
 img(1:size(scaledMask,1), 1:size(scaledMask,2), 1:size(scaledMask,3)) = scaledMask;
                 </code>
             </pre>
 
+            <p>Or, we can directly construct the 3D array from a 3D image file. Below, we read a .im file from the Princeton Shape Benchmark (PSB) database:</p>
+            <pre>
+                <code>
+fid = fopen('please input the path of the .im file','r');
+status = fseek(fid,1024,'bof');
+mask = fread(fid);
+fclose(fid);
+
+% for PSB database, we can directly reshape the image
+N = 128;
+img = reshape(mask,N,N,N);
+                </code>
+            </pre>
+            <h4>Visualization</h4>
+            <p>We also provide a way to visualize the input 3D image:</p>
+            <pre>
+                <code>
+figure, patch(isosurface(img, 0.1), 'Facecolor', [0 1 0], 'FaceAlpha', 0.2, 'edgecolor','none')
+grid on
+                </code>
+            </pre>
+            <p>The figure below is the visualization of an airplane:</p>
+            <img src="airplane.png" alt="airplane">
             <h4>Extract Features</h4>
             <p>Now we can easily get the Krawtchouk moment invariants of the 3D image:</p>
             <pre>
