@@ -120,3 +120,9 @@ code {
     margin-left: 10px;
     margin-right: 10px;
 }
+
+img{
+    width: 400px;
+    margin: 0;
+    padding: 0;
+}
