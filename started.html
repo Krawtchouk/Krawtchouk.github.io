@@ -40,7 +40,10 @@
                 </tr>
                 <tr>
                     <td>img <span style="font-size: small; color: grey;">(Mandatory)</span></td>
-                    <td>An array of size NxNxN representing the 3D image. To maintain the spherical coverage shape of the weight function, we require the 3D image to be a cube.</td>
+                    <td>An array of size NxNxN representing the 3D image. 
+                        To maintain the spherical coverage shape of the weight function, we require the 3D image to be a cube. 
+                        Additionally, the image should be binarized, i.e., the pixel intensity at any point on the object is 1, otherwise it is 0.
+                    </td>
                 </tr>
                 <tr>
                     <td>order <span style="font-size: small; color: grey;">(Optional)</span></td>
