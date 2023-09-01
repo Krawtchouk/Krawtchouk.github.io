@@ -39,25 +39,25 @@ img = readImage(path, S);
                 </code>
             </pre>
             
-            <h4>run3DKMI: Feature Extraction</h4>
+            <h4>get3DKMI: Feature Extraction</h4>
             <p>If we want to extract the global features from the image:</p>
             <pre>
                 <code>
-invariants = run3DKMI(img, S);
+invariants = get3DKMI(img, S);
                 </code>
             </pre>
             <p>If we want to specify the order of the moments:</p>
             <pre>
                 <code>
 order = 3;
-invariants = run3DKMI(img, S, order);
+invariants = get3DKMI(img, S, order);
                 </code>
             </pre>
             <p>If we want to extract the local features around the point-of-interst (POI) instead of the global features:</p>
             <pre>
                 <code>
 POI = [63, 63, 63];
-invariants = run3DKMI(img, S, POI);
+invariants = get3DKMI(img, S, POI);
                 </code>
             </pre>
             <p>We can also specify the order of the moments when extracting the local features:</p>
@@ -65,7 +65,7 @@ invariants = run3DKMI(img, S, POI);
                 <code>
 POI = [63, 63, 63];
 order = 3;
-invariants = run3DKMI(img, S, POI, order);
+invariants = get3DKMI(img, S, POI, order);
                 </code>
             </pre>
 
