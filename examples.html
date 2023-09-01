@@ -8,7 +8,7 @@
 <body>
     
     <div id="head">
-        <span style="color: #009879;"><b>KMI3D</b></span>
+        <span style="color: #009879;"><b>3DKMI</b></span>
         <span style="color: grey; font-size: 10px;">A MATLAB package to calculate 3D Krawtchouk moment invariants</span>
     </div>
     
@@ -26,83 +26,66 @@
         </div>
 
         <div id="content">
-            <h4>Prepare the Image</h4>
-            <p>Here, we provide an example of how to construct an input 3D array using 2D image slices:</p>
+            <h4>readImage: Construct a 3D Array</h4>
+            <p>Here, we provide an example of how to construct an input 3D array. 
+                The path can either point to a folder containing a sequence of 2D image slices, 
+                each stored as an individual .png file, or it can direct to a 3D image file. 
+                Our current implementation supports .im and .stl formats.</p>
             <pre>
                 <code>
-folder = "please input the folder that contains the slices";
-FileList = natsortfiles(dir(fullfile(folder, '*.png')));
-
-array3d = zeros(rows, cols, numOfSlices);  % params of the 3D image
-for slice = 1 : numOfSlices
-&nbsp;&nbsp;&nbsp;&nbsp;File = fullfile(FileList(slice).folder, FileList(slice).name);
-&nbsp;&nbsp;&nbsp;&nbsp;thisSlice = imread(File);
-&nbsp;&nbsp;&nbsp;&nbsp;array3d(:,:,slice) = thisSlice;
-end
-
-mask = false(size(array3d));
-pixIndex = find(array3d > 0);
-mask(pixIndex) = 1;  % binary image
-
-% adjust the image size as needed, here we resize the image to 128x128x128
-N = 128;
-resizeScale = N / max([rows, cols, numOfSlices]);
-scaledMask = imresize3(mask, resizeScale);
-img = zeros(N, N, N);
-img(1:size(scaledMask,1), 1:size(scaledMask,2), 1:size(scaledMask,3)) = scaledMask;
+S = 128;
+path = 'please input the path that contains the slices/3D image file';
+img = readImage(path, S);
+                </code>
+            </pre>
+            
+            <h4>run3DKMI: Feature Extraction</h4>
+            <p>If we want to extract the global features from the image:</p>
+            <pre>
+                <code>
+invariants = run3DKMI(img, S);
+                </code>
+            </pre>
+            <p>If we want to specify the order of the moments:</p>
+            <pre>
+                <code>
+order = 3;
+invariants = run3DKMI(img, S, order);
+                </code>
+            </pre>
+            <p>If we want to extract the local features around the point-of-interst (POI) instead of the global features:</p>
+            <pre>
+                <code>
+POI = [63, 63, 63];
+invariants = run3DKMI(img, S, POI);
+                </code>
+            </pre>
+            <p>We can also specify the order of the moments when extracting the local features:</p>
+            <pre>
+                <code>
+POI = [63, 63, 63];
+order = 3;
+invariants = run3DKMI(img, S, POI, order);
                 </code>
             </pre>
 
-            <p>Or, we can directly construct the 3D array from a 3D image file. Below, we read a .im file from the Princeton Shape Benchmark (PSB) database:</p>
-            <pre>
-                <code>
-fid = fopen('please input the path of the .im file','r');
-status = fseek(fid,1024,'bof');
-mask = fread(fid);
-fclose(fid);
 
-% for PSB database, we can directly reshape the image
-N = 128;
-img = reshape(mask,N,N,N);
-                </code>
-            </pre>
             <h4>Visualization</h4>
             <p>We also provide a way to visualize the input 3D image:</p>
             <pre>
                 <code>
-figure, patch(isosurface(img, 0.1), 'Facecolor', [0 1 0], 'FaceAlpha', 0.2, 'edgecolor','none')
-grid on
-                </code>
-            </pre>
-            <p>The figure below is the visualization of an airplane:</p>
-            <img src="airplane.png" alt="airplane">
-            <h4>Extract Features</h4>
-            <p>Now we can easily get the Krawtchouk moment invariants of the 3D image:</p>
-            <pre>
-                <code>
-invariants = KMI3D(img);
-                </code>
-            </pre>
-            <p>If we want to specify other input arguments, such as the order of the moments:</p>
-            <pre>
-                <code>
-invariants = KMI3D(img, 3);
-                </code>
-            </pre>
-            <p>or the point-of-interest:</p>
-            <pre>
-                <code>
-invariants = KMI3D(img, [63, 63, 63]);
-                </code>
-            </pre>
-            <p>or both of them:</p>
-            <pre>
-                <code>
-invariants = KMI3D(img, 3, [63, 63, 63]);
+color = [178, 190, 181] / 255;
+figure, patch(isosurface(img, 0.1), 'Facecolor', color, 'FaceAlpha', 0.5, 'edgecolor','none')
                 </code>
             </pre>
 
-
+            <h4>Results</h4>
+            <p>We selected two distinct 3D shapes from the McGill 3D shape benchmark: an airplane and a cup as shown below. 
+                Ideally, the invariant values should exhibit notable differences, considering the substantial dissimilarity between the shapes. 
+                However, we observed only slight differences. 
+                This outcome is actually acceptable, given that the distance between the original and transformed images is significantly smaller than this numerical difference.
+            </p>
+            <img src="modulation.png" alt="airplane and cup">
         </div>
 
     </div>
