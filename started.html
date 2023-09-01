@@ -8,7 +8,7 @@
 <body>
     
     <div id="head">
-        <span style="color: #009879;"><b>KMI3D</b></span>
+        <span style="color: #009879;"><b>3DKMI</b></span>
         <span style="color: grey; font-size: 10px;">A MATLAB package to calculate 3D Krawtchouk moment invariants</span>
     </div>
 
@@ -30,8 +30,8 @@
             <p><a href="https://github.com/krawtchouk/Krawtchouk-Moment-Invariants/archive/refs/heads/main.zip">krawtchouk.zip</a> - August 2023</p>
             <p>Once the download is completed, copy the downloaded .zip file to your working directory and unzip it.</p>
             <h4>Input Arguments and Output</h4>
-            <p>The core files of our package include <span style="font-style: italic;">KMI3D.m</span>, <span style="font-style: italic;">prepStep.m</span>, and <span style="font-style: italic;">extractFeatures.m</span>. 
-                The function KMI3D plays a crucial role in receiving user input and producing the final output. 
+            <p>The core files of our package include <span style="font-style: italic;">readImage.m</span> and <span style="font-style: italic;">run3DKMI.m</span>. 
+                The function <span style="font-style: italic;">run3DKMI</span> plays a crucial role in receiving user input and producing the final output. 
                 Therefore, understanding the formats of inputs and outputs is key to helping users achieve the desired outcomes effectively. </p>
             <table>
                 <tr>
@@ -39,10 +39,16 @@
                     <td><b>Description</b></td>
                 </tr>
                 <tr>
-                    <td>img <span style="font-size: small; color: grey;">(Mandatory)</span></td>
-                    <td>An array of size NxNxN representing the 3D image. 
-                        To maintain the spherical coverage shape of the weight function, we require the 3D image to be a cube. 
-                        Additionally, the image should be binarized, i.e., the pixel intensity at any point on the object is 1, otherwise it is 0.
+                    <td>arr <span style="font-size: small; color: grey;">(Mandatory)</span></td>
+                    <td>An array representing the 3D image. 
+                        The image should be binarized, i.e., the pixel intensity at any point on the object is 1, otherwise it is 0.
+                    </td>
+                </tr>
+                <tr>
+                    <td>S <span style="font-size: small; color: grey;">(Mandatory)</span></td>
+                    <td>An intended size of the image. 
+                        To maintain the spherical coverage shape of the weight function when extracting the local features, we require the 3D image to be a cube. 
+                        It is important to use a consistent size when comparing the features extracted from different 3D images.
                     </td>
                 </tr>
                 <tr>
@@ -54,10 +60,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>poi <span style="font-size: small; color: grey;">(Optional)</span></td>
-                    <td>"poi" stands for "point-of-interest", denoting a 1x3 array that specifies the coordinates of the point of interest within the image. 
-                        By specifying it, the extracted feature can be more focused on the region around the point.</br>
-                        <span style="font-size: small; color: grey;">Default value: [(N-1)/2, (N-1)/2, (N-1)/2]</span>
+                    <td>POI <span style="font-size: small; color: grey;">(Optional)</span></td>
+                    <td>"POI" stands for "point-of-interest", denoting a 1x3 array that specifies the coordinates of the point of interest within the image. 
+                        If the user specify a POI as input, then the localized features around the POI will be extracted, whereas the absence of this input results in the extraction of features from the image as a whole.</br>
+                        <span style="font-size: small; color: grey;">Default value: []</span>
                     </td>
                 </tr>
             </table>
@@ -68,7 +74,7 @@
                     <td><b>Description</b></td>
                 </tr>
                 <tr>
-                    <td>features</td>
+                    <td>invariants</td>
                     <td>An 1xP array representing the extracted features (3D Krawtchouk moment invariants). The length P of the features depends on the order.</td>
                 </tr>
             </table>
