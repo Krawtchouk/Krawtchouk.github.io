@@ -33,9 +33,9 @@
                 Our current implementation supports .im and .stl formats.</p>
             <pre>
                 <code>
-S = 128;
+dim = 128;
 path = 'please input the path that contains the slices/3D image file';
-img = readImage(path, S);
+arr = readImage(path, dim);
                 </code>
             </pre>
             
@@ -43,21 +43,21 @@ img = readImage(path, S);
             <p>If we want to extract the global features from the image:</p>
             <pre>
                 <code>
-invariants = get3DKMI(img, S);
+invariants = get3DKMI(arr, dim);
                 </code>
             </pre>
             <p>If we want to specify the order of the moments:</p>
             <pre>
                 <code>
 order = 3;
-invariants = get3DKMI(img, S, order);
+invariants = get3DKMI(arr, dim, order);
                 </code>
             </pre>
             <p>If we want to extract the local features around the point-of-interst (POI) instead of the global features:</p>
             <pre>
                 <code>
 POI = [63, 63, 63];
-invariants = get3DKMI(img, S, POI);
+invariants = get3DKMI(arr, dim, POI);
                 </code>
             </pre>
             <p>We can also specify the order of the moments when extracting the local features:</p>
@@ -65,7 +65,7 @@ invariants = get3DKMI(img, S, POI);
                 <code>
 POI = [63, 63, 63];
 order = 3;
-invariants = get3DKMI(img, S, POI, order);
+invariants = get3DKMI(arr, dim, POI, order);
                 </code>
             </pre>
 
@@ -75,7 +75,7 @@ invariants = get3DKMI(img, S, POI, order);
             <pre>
                 <code>
 color = [178, 190, 181] / 255;
-figure, patch(isosurface(img, 0.1), 'Facecolor', color, 'FaceAlpha', 0.5, 'edgecolor','none')
+figure, patch(isosurface(arr, 0.1), 'Facecolor', color, 'FaceAlpha', 0.5, 'edgecolor','none')
                 </code>
             </pre>
 
